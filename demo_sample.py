@@ -9,17 +9,23 @@ from tokenizer import tokenize
 from PIL import Image as PImage
 from pathlib import Path
 
+
+# ========== Setup ==========           把下面这4个路径换成你本地的路径。 vae应该在主目录的pretrained文件夹下
+device = "cuda" if torch.cuda.is_available() else "cpu"
+MODEL_DEPTH = 16  # or 20, 24, 30
+vae_ckpt = 'pretrained/vae_ch160v4096z32.pth'
+var_ckpt = 'local_output/ar-ckpt-last.pth'
+condition_ckpt = './condalign2-ckpt-best.pth'
+kodak_dir = "/content/drive/MyDrive/huawei/kodak"  # 更新路径
+output_dir = "./recon_kodak"
+os.makedirs(output_dir, exist_ok=True)
+
+
+
+
 # 定义normalize函数，将[0,1]转换为[-1,1]
 def normalize_01_into_pm1(tensor):
     return tensor.mul(2.0).sub(1.0)
-
-# ========== Setup ==========
-device = "cuda" if torch.cuda.is_available() else "cpu"
-MODEL_DEPTH = 16  # or 20, 24, 30
-vae_ckpt = '/content/drive/MyDrive/huawei/var/vae_ch160v4096z32.pth'
-var_ckpt = '/content/drive/MyDrive/huawei/VAR-TACO/inj_1/ar-ckpt-last-0715.pth'
-condition_ckpt = '/content/drive/MyDrive/huawei/VAR-TACO/inj_1/condalign2-ckpt-best.pth'
-
     
 # ========== Load models ==========
 vae, var = build_vae_var(
@@ -83,10 +89,7 @@ else:
 condition_model.eval()
 for p in condition_model.parameters(): p.requires_grad_(False)
 
-# ========== Image-Text Pairs ==========
-kodak_dir = "/content/drive/MyDrive/huawei/kodak"  # 更新路径
-output_dir = "/content/drive/MyDrive/huawei/VAR-TACO/recon_kodak"
-os.makedirs(output_dir, exist_ok=True)
+
 
 kodak_data = [
     ("kodim01.png", "a brick building with red doors and windows"),
