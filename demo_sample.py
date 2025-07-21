@@ -162,7 +162,7 @@ for fname, caption in kodak_data:
             with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=(device=='cuda')):
                 recon = var.autoregressive_infer_from_fhat(
                     B=batch_size, embed_fused=embed_fused,
-                    top_k=500, top_p=0.9, temperature=0.8, more_smooth=True  # 优化的参数
+                    top_k=500, top_p=0.9, temperature=0.8, more_smooth=False  # 优化的参数
                 )
 
         # Save image - 使用更好的布局
