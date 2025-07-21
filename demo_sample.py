@@ -16,7 +16,7 @@ MODEL_DEPTH = 16  # or 20, 24, 30
 vae_ckpt = 'pretrained/vae_ch160v4096z32.pth'
 var_ckpt = 'local_output/ar-ckpt-last.pth'
 condition_ckpt = './condalign2-ckpt-best.pth'
-kodak_dir = "/content/drive/MyDrive/huawei/kodak"  # 更新路径
+kodak_dir = "./kodak"  # 更新路径
 output_dir = "./recon_kodak"
 os.makedirs(output_dir, exist_ok=True)
 
@@ -162,7 +162,7 @@ for fname, caption in kodak_data:
             with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=(device=='cuda')):
                 recon = var.autoregressive_infer_from_fhat(
                     B=batch_size, embed_fused=embed_fused,
-                    top_k=500, top_p=0.9, temperature=0.8, more_smooth=False  # 优化的参数
+                    top_k=900, top_p=0.95, temperature=1, more_smooth=False  # 优化的参数
                 )
 
         # Save image - 使用更好的布局
