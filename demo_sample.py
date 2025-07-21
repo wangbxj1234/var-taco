@@ -8,6 +8,7 @@ from condition_model import InjExtraCondAlignModel
 from tokenizer import tokenize
 from PIL import Image as PImage
 from pathlib import Path
+import torch.nn.functional as F
 
 
 # ========== Setup ==========           把下面这4个路径换成你本地的路径。 vae应该在主目录的pretrained文件夹下
@@ -156,6 +157,9 @@ for fname, caption in kodak_data:
         # 使用condition model融合特征
         with torch.no_grad():
             embed_fused = condition_model(text_embeddings, fhat_k)  # (B, 768)
+            embed_fused = F.normalize(embed_fused, dim=1)
+
+
 
         # Sampling - 优化参数
         with torch.inference_mode():
